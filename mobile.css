@@ -1,0 +1,315 @@
+/* =========================================================
+   BALLARK LABS: MOBILE / RESPONSIVE LAYER
+   Load this LAST in <head> so it overrides earlier styles.
+   ========================================================= */
+
+/* ---------- Global safety ---------- */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body { overflow-x: clip; }
+img, video, picture { max-width: 100%; }
+h1, h2, h3, p, a, li, blockquote, figcaption { overflow-wrap: break-word; }
+
+/* ---------- Hamburger + menu: hidden on desktop ---------- */
+.bl-burger, .bl-menu { display: none; }
+
+/* =========================================================
+   TABLET + PHONE (hamburger appears)
+   ========================================================= */
+@media (max-width: 900px) {
+
+  /* Header: logo left, burger right */
+  .bl-header {
+    padding: 14px var(--margin, 1.25rem) !important;
+    padding-top: calc(14px + env(safe-area-inset-top)) !important;
+    gap: 12px !important;
+  }
+  .bl-header .bl-nav,
+  .bl-header .bl-header-right > .button { display: none !important; }
+  .bl-header .bl-header-right { gap: 0 !important; }
+
+  .bl-burger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 5px;
+    width: 46px;
+    height: 46px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: #fbfbf8;
+    color: #0b0b0c;
+    cursor: pointer;
+    box-shadow: 3px 3px 0 rgba(0, 0, 60, .45);
+    -webkit-tap-highlight-color: transparent;
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .bl-burger:active { transform: scale(.94); box-shadow: 1px 1px 0 rgba(0, 0, 60, .45); }
+  .bl-burger:focus-visible { outline: 2px solid #fbfbf8; outline-offset: 3px; }
+  .bl-burger span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+    transition: transform .3s cubic-bezier(.16, 1, .3, 1), opacity .2s ease;
+  }
+  html.bl-menu-open .bl-burger span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  html.bl-menu-open .bl-burger span:nth-child(2) { opacity: 0; }
+  html.bl-menu-open .bl-burger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* Header turns solid while menu is open */
+  html.bl-menu-open .bl-header {
+    background: #000080 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, .12);
+  }
+  html.bl-menu-open,
+  html.bl-menu-open body { overflow: hidden !important; }
+
+  /* Full screen menu panel */
+  .bl-menu {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2rem;
+    position: fixed;
+    inset: 0;
+    z-index: 9990;
+    padding: calc(5.75rem + env(safe-area-inset-top)) var(--margin, 1.25rem) calc(1.5rem + env(safe-area-inset-bottom));
+    background:
+      radial-gradient(120% 60% at 100% 0%, rgba(34, 97, 233, .45), transparent 60%),
+      #000080;
+    color: #fbfbf8;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity .3s ease, transform .4s cubic-bezier(.16, 1, .3, 1), visibility 0s linear .4s;
+  }
+  html.bl-menu-open .bl-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition: opacity .3s ease, transform .4s cubic-bezier(.16, 1, .3, 1), visibility 0s;
+  }
+
+  .bl-menu__links { display: flex; flex-direction: column; }
+  .bl-menu__link {
+    display: flex;
+    align-items: baseline;
+    gap: .9rem;
+    padding: .85rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, .16);
+    font-family: var(--font-display, inherit);
+    font-weight: 600;
+    font-size: clamp(1.9rem, 8.5vw, 2.75rem);
+    line-height: 1.05;
+    letter-spacing: -.03em;
+    color: inherit;
+    text-decoration: none;
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity .35s ease, transform .45s cubic-bezier(.16, 1, .3, 1);
+  }
+  html.bl-menu-open .bl-menu__link {
+    opacity: 1;
+    transform: none;
+    transition-delay: calc(.08s + var(--i, 0) * .05s);
+  }
+  .bl-menu__n {
+    font-family: var(--font-sans, inherit);
+    font-size: .8rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    opacity: .55;
+    min-width: 1.6rem;
+  }
+  .bl-menu__link[aria-current="page"] { color: #8fb2ff; }
+  .bl-menu__link:active { opacity: .7; }
+
+  .bl-menu__foot { display: flex; flex-direction: column; gap: 1rem; align-items: flex-start; }
+  .bl-menu__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .6rem;
+    width: 100%;
+    padding: 1rem 1.5rem;
+    border-radius: 999px;
+    background: #fbfbf8;
+    color: #0b0b0c;
+    font-weight: 600;
+    font-size: 1.05rem;
+    text-decoration: none;
+    box-shadow: 4px 4px 0 rgba(0, 0, 60, .55);
+  }
+  .bl-menu__mail {
+    color: inherit;
+    opacity: .75;
+    font-size: .95rem;
+    text-decoration: underline;
+    text-underline-offset: .2em;
+    overflow-wrap: anywhere;
+  }
+
+  /* Mascot is decorative: keep it from blocking taps while menu is open */
+  html.bl-menu-open .mascot-layer { visibility: hidden !important; }
+}
+
+/* =========================================================
+   PHONES
+   ========================================================= */
+@media (max-width: 700px) {
+
+  /* Logo a little smaller so it never collides with the burger */
+  .bl-header .navbar-logo { font-size: 1.25rem !important; }
+
+  /* Hero: clear the fixed header */
+  section.hero { padding-top: 5.5rem !important; }
+  .bl-herobottom { margin-top: 1.5rem; }
+  .bl-eyebrow { font-size: .9rem; }
+  .bl-sub { font-size: 1.1rem; line-height: 1.25; }
+  .bl-ctas { gap: 1rem; }
+  .bl-trust { font-size: .875rem; }
+  .bl-ticker { font-size: .9rem; margin-top: 1.25rem; }
+
+  /* Services hero */
+  .services-hero { min-height: auto !important; }
+  .services-hero-copy { top: 0 !important; padding-top: 1rem; }
+  .services-hero-copy h1 { font-size: clamp(2.5rem, 12vw, 3.75rem) !important; }
+  .services-hero-copy .bl-sub { font-size: 1.15rem !important; font-weight: 600 !important; margin-top: 1rem !important; }
+  .svc-bubbles { gap: .9rem .6rem !important; margin-top: 1.5rem !important; }
+  .svc-bubbles a { font-size: .95rem !important; padding: .55rem .8rem .6rem !important; max-width: 100%; box-shadow: 4px 4px 0 rgba(0, 0, 60, .55) !important; }
+
+  /* Sections */
+  .bl-sec { padding: 10svh 0; }
+  .bl-in { row-gap: 1.5rem; }
+  .bl-bubble { font-size: 1.1rem; max-width: 100%; }
+  .bl-h2 { font-size: clamp(2rem, 9.5vw, 3rem); }
+  .bl-copy { font-size: 1rem; }
+  .bl-proof { font-size: 1.2rem; }
+  .bl-closer { font-size: 1.4rem; margin-top: 2rem; }
+  .bl-stat { font-size: 1.05rem; }
+
+  /* Service / FAQ accordions */
+  .bl-card summary { gap: .9rem; }
+  .bl-card strong { font-size: 1.25rem; }
+  .bl-card em { font-size: .95rem; }
+  .bl-cardbody { padding-left: 0; font-size: .98rem; }
+  .bl-plus { width: 1.25rem; height: 1.25rem; }
+
+  /* Numbers block */
+  .bl-nums { gap: 1.5rem 1rem; }
+  .bl-n b { font-size: clamp(2.1rem, 11vw, 3rem); }
+  .bl-n span { font-size: .85rem; }
+
+  /* Work grid and chips */
+  .bl-chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin-inline: calc(var(--margin, 1.25rem) * -1);
+    padding-inline: var(--margin, 1.25rem);
+    padding-bottom: .25rem;
+  }
+  .bl-chips::-webkit-scrollbar { display: none; }
+  .bl-chip { flex: none; white-space: nowrap; padding: .5rem 1rem; }
+  .bl-result { font-size: .85rem; }
+
+  /* Steps, quotes */
+  .bl-steps b { font-size: 1.6rem; }
+  .bl-quote blockquote { font-size: 1.3rem; }
+
+  /* Contact + footer */
+  #contact { padding-top: 12svh !important; }
+  #contact h2 { font-size: clamp(2.5rem, 12.5vw, 3.75rem) !important; }
+  #contact a[href^="mailto"].inline-block { font-size: clamp(1.25rem, 6.2vw, 1.9rem) !important; overflow-wrap: anywhere; }
+  .bl-ctas-final .button { width: 100%; justify-content: center; }
+  .bl-foot { margin-top: 2.5rem; }
+  .bl-brand { font-size: 1.35rem; }
+  .bl-cols { grid-template-columns: repeat(2, 1fr); gap: 1.5rem 1rem; }
+  .bl-cols a { padding: .4rem 0; }
+  .bl-legal { line-height: 1.8; }
+  .bl-trick { display: block; margin: .75rem 0 0; }
+
+  /* Timeline (extra polish on top of existing mobile rules) */
+  .bl-timeline-content .bl-proof { font-size: 1.15rem; }
+  .bl-timeline-content .bl-closer { font-size: 1rem; }
+
+  /* Floating bits: stop them overlapping each other */
+  .bl-cookie {
+    left: .75rem !important;
+    right: .75rem;
+    bottom: .75rem !important;
+    translate: none !important;
+    max-width: none !important;
+    justify-content: space-between;
+    font-size: .875rem;
+    z-index: 200;
+  }
+  .bl-intro-fly {
+    right: 1rem !important;
+    bottom: 5.25rem !important;
+    padding: 10px 16px !important;
+    font-size: 13px !important;
+  }
+
+  /* Dialogs */
+  .bl-dialog { width: calc(100vw - 2rem); padding: 1.25rem; }
+  .bl-dialog h3 { font-size: 1.5rem; }
+  .bl-dialog input, .bl-dialog textarea { font-size: 16px; } /* stops iOS zoom on focus */
+}
+
+/* Very small phones */
+@media (max-width: 380px) {
+  .bl-cols { grid-template-columns: 1fr; }
+  .bl-menu__link { font-size: 1.75rem; }
+}
+
+/* Respect reduced motion for the menu too */
+@media (prefers-reduced-motion: reduce) {
+  .bl-menu, .bl-menu__link, .bl-burger span { transition: none !important; }
+}
+
+
+/* =========================================================
+   HOME HERO ON PHONES (matches the reference layout)
+   Screen 1 = headline at top + mascot & speech bubble centered.
+   The small text, buttons and ticker move just below this screen.
+   ========================================================= */
+@media (max-width: 700px) {
+
+  section.hero:not(.services-hero) {
+    height: 100vh !important;
+    height: 100svh !important;
+    min-height: 0 !important;
+    padding-top: 6rem !important;
+    grid-template-rows: 1fr !important;
+    align-content: start;
+  }
+
+  /* Headline: big, top-left, under the header */
+  section.hero:not(.services-hero) h1 {
+    grid-row: 1 !important;
+    align-self: start !important;
+    padding-top: 1rem !important;
+    font-size: clamp(3.4rem, 15.5vw, 5.5rem) !important;
+    line-height: .92 !important;
+  }
+
+  /* Everything else sits right below the first screen */
+  section.hero:not(.services-hero) > .bl-herobottom {
+    position: absolute !important;
+    grid-area: auto !important;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin: 0 !important;
+    padding: 2rem var(--margin, 1.25rem) 2.5rem;
+    background: #000080;
+    z-index: 2;
+  }
+}
